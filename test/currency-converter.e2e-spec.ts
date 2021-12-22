@@ -17,16 +17,31 @@ describe('CurrencyConverterController (e2e)', () => {
     await app.init();
   });
 
-  it('/currency-converter/converted-currency (GET)', () => {
-    const query: ConvertCurrencyQueryDTO = {
-      fromAmount: '1',
-      fromCurrency: CurrencyEnum.TWD,
-      toCurrency: CurrencyEnum.TWD,
-    };
-    return request(app.getHttpServer())
-      .get('/currency-converter/converted-currency')
-      .query(query)
-      .expect(200)
-      .expect({ toAmount: query.fromAmount });
+  describe('/currency-converter/converted-currency (GET)', () => {
+    it('200', () => {
+      const query: ConvertCurrencyQueryDTO = {
+        fromAmount: '100',
+        fromCurrency: CurrencyEnum.TWD,
+        toCurrency: CurrencyEnum.TWD,
+      };
+      return request(app.getHttpServer())
+        .get('/currency-converter/converted-currency')
+        .query(query)
+        .expect(200)
+        .expect({ toAmount: '100.00' });
+    });
+
+    it('200 with thousands commas', () => {
+      const query: ConvertCurrencyQueryDTO = {
+        fromAmount: '1000',
+        fromCurrency: CurrencyEnum.TWD,
+        toCurrency: CurrencyEnum.TWD,
+      };
+      return request(app.getHttpServer())
+        .get('/currency-converter/converted-currency')
+        .query(query)
+        .expect(200)
+        .expect({ toAmount: '1,000.00' });
+    });
   });
 });
